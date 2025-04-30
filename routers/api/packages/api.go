@@ -519,6 +519,10 @@ func CommonRoutes() *web.Router {
 						r.Put("", terraform.UploadState)
 						r.Delete("", terraform.DeleteStateFile)
 					}, reqPackageAccess(perm.AccessModeWrite))
+					r.Group("/lock", func() {
+						r.Post("", terraform.LockState)
+						r.Delete("", terraform.UnlockState)
+					}, reqPackageAccess(perm.AccessModeWrite))
 				})
 			})
 		}, reqPackageAccess(perm.AccessModeRead))
