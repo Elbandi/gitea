@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   nightly-binary:
-    runs-on: namespace-profile-gitea-release-binary
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       # fetch all commits instead of only the last as some branches are long lived and could have many between versions
@@ -41,7 +41,7 @@ jobs:
           name: gitea
           path: dist/release/*
   nightly-docker-rootful:
-    runs-on: namespace-profile-gitea-release-docker
+    runs-on: ubuntu-latest
     permissions:
       packages: write # to publish to ghcr.io
     steps:
@@ -77,7 +77,7 @@ jobs:
           tags: |-
             ghcr.io/${{ github.repository_owner }}/gitea:${{ steps.clean_name.outputs.branch }}
   nightly-docker-rootless:
-    runs-on: namespace-profile-gitea-release-docker
+    runs-on: ubuntu-latest
     permissions:
       packages: write # to publish to ghcr.io
     steps:
