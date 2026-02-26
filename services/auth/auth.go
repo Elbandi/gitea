@@ -95,6 +95,11 @@ func (a *authPathDetector) isContainerPath() bool {
 	return strings.HasPrefix(a.req.URL.Path, "/v2/")
 }
 
+// isTerraformPath checks if the request targets the terraform endpoint
+func (a *authPathDetector) isTerraformPath() bool {
+	return strings.HasPrefix(a.req.URL.Path, "/v1/providers/")
+}
+
 func (a *authPathDetector) isGitRawOrAttachPath() bool {
 	return a.vars.gitRawOrAttachPathRe.MatchString(a.req.URL.Path)
 }
