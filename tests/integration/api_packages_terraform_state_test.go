@@ -38,7 +38,7 @@ func TestPackageTerraformState(t *testing.T) {
 			AddBasicAuth(user.Name)
 		MakeRequest(t, req, http.StatusCreated)
 
-		pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTfState)
+		pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTerraformState)
 		assert.NoError(t, err)
 		assert.Len(t, pvs, 1)
 
@@ -97,7 +97,7 @@ func TestPackageTerraformState(t *testing.T) {
 		defer tests.PrintCurrentTest(t)()
 
 		checkDownloadCount := func(count int64) {
-			pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTfState)
+			pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTerraformState)
 			assert.NoError(t, err)
 			assert.Len(t, pvs, 2)
 			assert.Equal(t, count, pvs[0].DownloadCount)
@@ -200,7 +200,7 @@ func TestPackageTerraformState(t *testing.T) {
 				AddBasicAuth(user.Name)
 			MakeRequest(t, req, http.StatusNotFound)
 
-			pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTfState)
+			pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTerraformState)
 			assert.NoError(t, err)
 			assert.Len(t, pvs, 1)
 
@@ -211,7 +211,7 @@ func TestPackageTerraformState(t *testing.T) {
 					AddBasicAuth(user.Name)
 				MakeRequest(t, req, http.StatusNoContent)
 
-				pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTfState)
+				pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTerraformState)
 				assert.NoError(t, err)
 				assert.Empty(t, pvs)
 			})
@@ -231,7 +231,7 @@ func TestPackageTerraformState(t *testing.T) {
 				AddBasicAuth(user.Name)
 			MakeRequest(t, req, http.StatusNoContent)
 
-			pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTfState)
+			pvs, err := packages.GetVersionsByPackageType(t.Context(), user.ID, packages.TypeTerraformState)
 			assert.NoError(t, err)
 			assert.Empty(t, pvs)
 

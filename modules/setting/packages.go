@@ -39,8 +39,8 @@ var (
 		LimitSizeRpm         int64
 		LimitSizeRubyGems    int64
 		LimitSizeSwift       int64
-		LimitSizeTfProvider  int64
-		LimitSizeTfState     int64
+		LimitSizeTerraformProviderider  int64
+		LimitSizeTerraformState     int64
 		LimitSizeVagrant     int64
 
 		DefaultRPMSignEnabled bool
@@ -88,8 +88,8 @@ func loadPackagesFrom(rootCfg ConfigProvider) (err error) {
 	Packages.LimitSizeRpm = mustBytes(sec, "LIMIT_SIZE_RPM")
 	Packages.LimitSizeRubyGems = mustBytes(sec, "LIMIT_SIZE_RUBYGEMS")
 	Packages.LimitSizeSwift = mustBytes(sec, "LIMIT_SIZE_SWIFT")
-	Packages.LimitSizeTfProvider = mustBytes(sec, "LIMIT_SIZE_TERRAFORM_PROVIDER")
-	Packages.LimitSizeTfState = mustBytes(sec, "LIMIT_SIZE_TERRAFORM_STATE")
+	Packages.LimitSizeTerraformProviderider = mustBytes(sec, "LIMIT_SIZE_TERRAFORM_PROVIDER")
+	Packages.LimitSizeTerraformState = mustBytes(sec, "LIMIT_SIZE_TERRAFORM_STATE")
 	Packages.LimitSizeVagrant = mustBytes(sec, "LIMIT_SIZE_VAGRANT")
 	Packages.DefaultRPMSignEnabled = sec.Key("DEFAULT_RPM_SIGN_ENABLED").MustBool(false)
 	return nil
