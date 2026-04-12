@@ -32,6 +32,7 @@ import (
 	"code.gitea.io/gitea/routers/api/packages/rpm"
 	"code.gitea.io/gitea/routers/api/packages/rubygems"
 	"code.gitea.io/gitea/routers/api/packages/swift"
+	"code.gitea.io/gitea/routers/api/packages/terraform"
 	"code.gitea.io/gitea/routers/api/packages/vagrant"
 	"code.gitea.io/gitea/services/auth"
 	"code.gitea.io/gitea/services/context"
@@ -509,6 +510,32 @@ func CommonRoutes() *web.Router {
 				r.Get("/identifiers", swift.CheckAcceptMediaType(swift.AcceptJSON), swift.LookupPackageIdentifiers)
 			}, reqPackageAccess(perm.AccessModeRead))
 		})
+		r.Group("/terraform", func() {
+			r.Group("/{packagename}", func() {
+				r.Delete("", reqPackageAccess(perm.AccessModeWrite), terraform.DeleteState)
+				r.Group("/state/{filename}", func() {
+					r.Get("", terraform.DownloadStateFile)
+					r.Group("", func() {
+						r.Put("", terraform.UploadState)
+						r.Delete("", terraform.DeleteStateFile)
+					}, reqPackageAccess(perm.AccessModeWrite))
+					r.Group("/lock", func() {
+						r.Post("", terraform.LockState)
+						r.Delete("", terraform.UnlockState)
+					}, reqPackageAccess(perm.AccessModeWrite))
+				})
+			})
+			r.Group("/provider/{packagename}/{packageversion}", func() {
+				r.Group("", func() {
+					r.Put("", terraform.UploadProvider)
+					r.Delete("", terraform.DeleteProvider)
+				}, reqPackageAccess(perm.AccessModeWrite))
+				r.Group("/{filename}", func() {
+					r.Methods("HEAD,GET", "", terraform.DownloadProviderFile)
+					//						r.Delete("", terraform.DeleteProviderFile)
+				})
+			})
+		}, reqPackageAccess(perm.AccessModeRead))
 		r.Group("/vagrant", func() {
 			r.Group("/authenticate", func() {
 				r.Get("", vagrant.CheckAuthenticate)
@@ -569,6 +596,31 @@ func ContainerRoutes() *web.Router {
 			g.MatchPath("DELETE", `/<image:*>/manifests/<reference>`, container.VerifyImageName, reqPackageAccess(perm.AccessModeWrite), container.DeleteManifest)
 		})
 	}, container.ReqContainerAccess, context.UserAssignmentWeb(), context.PackageAssignment(), reqPackageAccess(perm.AccessModeRead))
+
+	return r
+}
+
+// TerraformProviderRoutes provides endpoints for Terraform provider discovery and downloads.
+// Implements the Terraform provider registry protocol for listing versions and downloading providers.
+// These endpoints are mounted on a separate route group to handle provider-specific requests.
+func TerraformProviderRoutes() *web.Router {
+	r := web.NewRouter()
+
+	r.Use(context.PackageContexter())
+
+	verifyAuth(r, []auth.Method{
+		&auth.Basic{},
+		&auth.OAuth2{},
+	})
+
+	r.Group("/{username}", func() {
+		r.Group("/{packagename}", func() {
+			r.Get("/versions", terraform.GetProviderVersions)
+			r.Group("/{packageversion}", func() {
+				r.Get("/download/{os}/{architecture}", terraform.GetProviderDownload)
+			})
+		})
+	}, context.UserAssignmentWeb(), context.PackageAssignment(), reqPackageAccess(perm.AccessModeRead))
 
 	return r
 }

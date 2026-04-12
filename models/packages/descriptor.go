@@ -203,6 +203,10 @@ func GetPackageDescriptorWithCache(ctx context.Context, pv *PackageVersion, c *c
 		metadata = &rubygems.Metadata{}
 	case TypeSwift:
 		metadata = &swift.Metadata{}
+	case TypeTerraformProvider:
+		// terraform provider have no metadata
+	case TypeTerraformState:
+		// terraform state have no metadata
 	case TypeVagrant:
 		metadata = &vagrant.Metadata{}
 	default:

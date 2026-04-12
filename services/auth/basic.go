@@ -48,7 +48,7 @@ func (b *Basic) Verify(req *http.Request, w http.ResponseWriter, store DataStore
 	// Basic authentication should only fire on API, Feed, Download, Archives or on Git or LFSPaths
 	// Not all feed (rss/atom) clients feature the ability to add cookies or headers, so we need to allow basic auth for feeds
 	detector := newAuthPathDetector(req)
-	if !detector.isAPIPath() && !detector.isFeedRequest(req) && !detector.isContainerPath() && !detector.isAttachmentDownload() && !detector.isArchivePath() && !detector.isGitRawOrAttachOrLFSPath() {
+	if !detector.isAPIPath() && !detector.isFeedRequest(req) && !detector.isContainerPath() && !detector.isTerraformPath() && !detector.isAttachmentDownload() && !detector.isArchivePath() && !detector.isGitRawOrAttachOrLFSPath() {
 		return nil, nil
 	}
 
